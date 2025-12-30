@@ -15,37 +15,58 @@ function openFeatures() {
     });
   });
 }
-// openFeatures();
+openFeatures();
 
-var form = document.querySelector(".addTask form");
-var taskInput = document.querySelector(".addTask form #task-input");
-var taskDetailsInput = document.querySelector(".addTask form textarea");
-var taskCheckbox = document.querySelector(".addTask form #check");
+function todoList() {
+  var currentTask = []
 
-let currentTask = [
-    {
-        task: "Sample Task",
-        details: "This is a sample task details.",
-        important: true
-    },
-    {
-        task: "Sample Task 2",
-        details: "This is another sample task details.",
-        important: false
-    },
-    {
-        task: "Sample Task 3",
-        details: "This is yet another sample task details.",
-        important: true
-    },
+  if (localStorage.getItem("currentTask")) {
+       currentTask = JSON.parse(localStorage.getItem("currentTask"));
+  } else {
+    console.log("Task list is empty");
+  }
 
-];
+  function renderTask() {
+    var allTask = document.querySelector(".allTask");
 
-// form.addEventListener("submit", function (e) {
-//     e.preventDefault();
-//     console.log(taskInput.value);
-//     console.log(taskDetailsInput.value);
-//     console.log(taskCheckbox.checked);
-// })
+    var sum = "";
 
-var allTasks = document.querySelector(".allTask");
+    currentTask.forEach(function (elem, idx) {
+      sum = sum + `<div class="task">
+    <h5>${elem.task} <span class=${elem.important}>imp</span></h5>
+    <button id=${idx}>Mark as Complete</button>
+    </div>`;
+    });
+
+    allTask.innerHTML = sum;
+    localStorage.setItem("currentTask:", JSON.stringify(currentTask));
+
+    document.querySelectorAll(".task button").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        currentTask.splice(btn.id, 1);
+        renderTask();
+      });
+    });
+  }
+  renderTask();
+
+  let form = document.querySelector(".addTask form");
+  let taskInput = document.querySelector(".addTask form #task-input");
+  let taskDetailsInput = document.querySelector(".addTask form textarea");
+  let taskCheckbox = document.querySelector(".addTask form #check");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    currentTask.push({
+      task: taskInput.value,
+      details: taskDetailsInput.value,
+      important: taskCheckbox.checked,
+    });
+    renderTask();
+    taskCheckbox.checked = false;
+    taskInput.value = "";
+    taskDetailsInput.value = "";
+  });
+}
+
+todoList();
