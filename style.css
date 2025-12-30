@@ -61,7 +61,6 @@ section.allElems{
     position: absolute;
 }
 
-
 @property --rotate{
     syntax: "<angle>";
     initial-value: 0deg;
@@ -117,7 +116,6 @@ section.allElems{
     text-shadow: 0 0 8px rgb(99, 41, 12);
 } */
 
-
 .elem img{
     height: 100%;
     width: 100%;
@@ -142,7 +140,12 @@ section.allElems{
     background-color: var(--sec);
     padding: 40px; 
     display: none;
-    position: absolute;
+
+    /* jab page khul nhi raha tha yeh charo unke liye hai */
+    position: fixed;
+    top: 0;            
+    left: 0;           
+    z-index: 10;  
 }
 
 .back{
@@ -165,6 +168,7 @@ section.allElems{
 .todo-list-fullpage h2{
     font-size: 65px;
 }
+
 .todo-list-fullpage .todo-container{
     height: 80%;
     width: 100%;
@@ -231,7 +235,6 @@ section.allElems{
 .todo-container .addTask form button:active{
     scale: 0.97;
 }
-
 
 .todo-list-fullpage .todo-container .allTask{
     width: 65%;
@@ -312,4 +315,51 @@ section.allElems{
 
 .mark-imp label{
     font-size: 20px;
+}
+
+.daily-planner-fullpage h2{
+    font-size: 65px;
+}
+
+.daily-planner-fullpage .day-planner{
+    background-color: var(--pri);
+    height: 85%;
+    margin-top: 40px;
+    width: 100%;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    overflow: auto;
+}
+
+.daily-planner-fullpage .day-planner .day-planner-time{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 30px;
+    position: relative;
+    width: 49%;
+    margin-bottom: 2px;
+}
+
+.day-planner .day-planner-time p{
+    position: absolute;
+    top: 20%;
+    left: 5%;
+    color: var(--tri);
+    font-size: 18px;
+}
+
+.day-planner .day-planner-time input{
+    padding: 20px 45px;
+    width: 100%;
+    background-color: var(--sec);
+    border-radius: 5px;
+    border: none;
+    font-size: 35px;
+    padding-top: 34px;
+    outline: none;
 }

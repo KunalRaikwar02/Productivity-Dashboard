@@ -27,9 +27,9 @@ function todoList() {
   }
 
   function renderTask() {
-    var allTask = document.querySelector(".allTask");
+    let allTask = document.querySelector(".allTask");
 
-    var sum = "";
+    let sum = "";
 
     currentTask.forEach(function (elem, idx) {
       sum = sum + `<div class="task">
@@ -39,7 +39,7 @@ function todoList() {
     });
 
     allTask.innerHTML = sum;
-    localStorage.setItem("currentTask:", JSON.stringify(currentTask));
+    localStorage.setItem("currentTask", JSON.stringify(currentTask));
 
     document.querySelectorAll(".task button").forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -70,3 +70,45 @@ function todoList() {
 }
 
 todoList();
+
+function dailyPlanner() {
+  var dayPlanData = JSON.parse(localStorage.getItem("dayPlanData")) || {};
+var dayPlanner = document.querySelector(".day-planner");
+
+ function formatTime(hour) {
+    let ampm = hour >= 12 ? "PM" : "AM";
+    let hour12 = hour % 12;
+    if (hour12 === 0) hour12 = 12;
+    return hour12 + ":00 " + ampm;
+  }
+
+  var hours = Array.from({length:18}, (elem, idx) => {
+    let startHour = 6 + idx;
+    let endHour = startHour + 1;
+    return `${formatTime(startHour)} - ${formatTime(endHour)}`;
+  });
+
+var wholeDaySum = "";
+
+hours.forEach(function(elem, idx){
+  var saveData = dayPlanData[idx] || ""; 
+  wholeDaySum += `
+    <div class="day-planner-time">
+      <p>${elem}</p>
+      <input id="${idx}" type="text" placeholder="..." value="${saveData}">
+    </div>
+  `;
+});
+
+dayPlanner.innerHTML = wholeDaySum;
+
+var dayPlannerInput = document.querySelectorAll(".day-planner input");
+
+dayPlannerInput.forEach(function(elem){
+  elem.addEventListener("input", function(){
+    dayPlanData[elem.id] = elem.value;
+    localStorage.setItem("dayPlanData", JSON.stringify(dayPlanData));
+  });
+});
+}
+dailyPlanner();
