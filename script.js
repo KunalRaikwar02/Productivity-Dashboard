@@ -35,7 +35,11 @@ function todoList() {
       sum =
         sum +
         `<div class="task">
-    <h5>${elem.task} <span class=${elem.important}>imp</span></h5>
+    <h5>
+  ${elem.task}
+  ${elem.important ? `<span class="imp-badge">IMP</span>` : ""}
+</h5>
+
     <button id=${idx}>Mark as Complete</button>
     </div>`;
     });
@@ -200,57 +204,182 @@ function pomodoroTimer() {
 }
 pomodoroTimer();
 
-var header1Time = document.querySelector(".header1 h1");
-var header1Date = document.querySelector(".header1 h2");
-var header2Temp = document.querySelector('.header2 h2');
-var header2Condition = document.querySelector('.header2 .condition');
-var wind = document.querySelector('.header2 .wind');
-var humidity = document.querySelector('.header2 .humidity');
-var headIndex = document.querySelector('.header2 .heatIndex');
+function weatherFunctionality() {
+  var header1Time = document.querySelector(".header1 h1");
+  var header1Date = document.querySelector(".header1 h2");
+  var header2Temp = document.querySelector(".header2 h2");
+  var header2Condition = document.querySelector(".header2 .condition");
+  var wind = document.querySelector(".header2 .wind");
+  var humidity = document.querySelector(".header2 .humidity");
+  var headIndex = document.querySelector(".header2 .heatindex");
 
-// NOTE: API key restricted to this domain only
-// “Add your own WeatherAPI key to enable live weather data.”
-var apiKey = "YOUR_API_KEY";
+  // NOTE: API key restricted to this domain only
+  // “Add your own WeatherAPI key to enable live weather data.”
+  var apiKey = "YOUR_API_KEY";
 
-var city = "Pune";
+  var city = "Pune";
 
-// WEATHER API
-async function weatherAPICall() {
-  var response = await fetch(
-    `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`
-  );
+  // WEATHER API
+  async function weatherAPICall() {
+    var response = await fetch(
+      `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`
+    );
 
-  var data = await response.json();
+    var data = await response.json();
 
-  header2Temp.innerHTML = `${data.current.temp_c}°C`;
-  header2Condition.innerHTML = `${data.current.condition.text}`;
-  wind.innerHTML = `Wind: ${data.current.wind_kph} km/h`;
-  humidity.innerHTML = `Humidity: ${data.current.humidity}%`;
-  headIndex.innerHTML = `Heat Index: ${data.current.heatindex_c}°C`;
+    header2Temp.innerHTML = `${data.current.temp_c}°C`;
+    header2Condition.innerHTML = `${data.current.condition.text}`;
+    wind.innerHTML = `Wind: ${data.current.wind_kph} km/h`;
+    humidity.innerHTML = `Humidity: ${data.current.humidity}%`;
+    headIndex.innerHTML = `Heat Index: ${data.current.heatindex_c}°C`;
+  }
+  weatherAPICall();
+
+  // TIME & DATE
+  function timeDate() {
+    const totalDaysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    var date = new Date();
+    var dayOfWeek = totalDaysOfWeek[date.getDay()];
+    var hours = date.getHours();
+    var minutes = date.getMinutes().toString().padStart(2, "0");
+    var seconds = date.getSeconds().toString().padStart(2, "0");
+    var date1 = date.getDate();
+    var month = monthNames[date.getMonth()];
+    var year = date.getFullYear();
+
+    header1Date.innerHTML = `${date1} ${month}, ${year}`;
+
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    header1Time.innerHTML = `${dayOfWeek}, ${String(hours).padStart(
+      2,
+      "0"
+    )}:${minutes}:${seconds} ${ampm}`;
+  }
+  timeDate();
+  setInterval(timeDate, 1000); // live clock
 }
-weatherAPICall();
+weatherFunctionality();
 
-// TIME & DATE
-function timeDate() {
-  const totalDaysOfWeek = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+function changegTheme() {
+  var theme = document.querySelector(".theme");
+  var rootElement = document.documentElement;
+  var flag = 0;
 
-  var date = new Date();
-  var dayOfWeek = totalDaysOfWeek[date.getDay()];
-  var hours = date.getHours();
-  var minutes = date.getMinutes().toString().padStart(2, "0");
-  var seconds = date.getSeconds().toString().padStart(2, "0");
-  var date1 = date.getDate()
-  var month = monthNames[date.getMonth()]
-  var year = date.getFullYear()
-
-  header1Date.innerHTML = `${date1} ${month}, ${year}`
-
- var ampm = hours >= 12 ? "PM" : "AM";
- hours = hours % 12 || 12;
- header1Time.innerHTML = `${dayOfWeek}, ${String(hours).padStart(2,'0')}:${minutes}:${seconds} ${ampm}`;
+  theme.addEventListener("click", function () {
+    if (flag == 0) {
+      rootElement.style.setProperty("--pri", "#1A120B");
+      rootElement.style.setProperty("--sec", "#3C2A21");
+      rootElement.style.setProperty("--tri", "#D5CEA3");
+      rootElement.style.setProperty("--tri2", "#E5E5CB");
+      flag = 1;
+    } else if (flag == 1) {
+      rootElement.style.setProperty("--pri", "#000000ff");
+      rootElement.style.setProperty("--sec", "#636363ff");
+      rootElement.style.setProperty("--tri", "#efdfdfff");
+      rootElement.style.setProperty("--tri2", "#2f4648ff");
+      flag = 2;
+    } else if (flag == 2) {
+      rootElement.style.setProperty("--pri", "#1B211A");
+      rootElement.style.setProperty("--sec", "#628141");
+      rootElement.style.setProperty("--tri", "#8BAE66");
+      rootElement.style.setProperty("--tri2", "#EBD5AB");
+      flag = 0;
+    }
+  });
 }
-timeDate();
-setInterval(timeDate, 1000); // live clock
+changegTheme();
 
+function dailyGoalsFeature() {
+    const goalInput = document.getElementById("goal-input");
+    const addGoalBtn = document.getElementById("add-goal-btn");
+    const goalsList = document.querySelector(".goals-list");
+    const progressFill = document.querySelector(".progress-fill");
+    const progressPercent = document.querySelector(".progress-percent");
+    const currentDateElem = document.querySelector(".current-date");
+
+    let goals = JSON.parse(localStorage.getItem("dailyGoals")) || [];
+
+    // Show current date
+    const today = new Date();
+    const options = { weekday: "long", month: "long", day: "numeric", year: "numeric" };
+    currentDateElem.textContent = today.toLocaleDateString("en-US", options);
+
+    function updateProgress() {
+        const total = goals.length || 1;
+        const completed = goals.filter(g => g.completed).length;
+        const percent = Math.round((completed / total) * 100);
+        progressFill.style.width = percent + "%";
+        progressPercent.textContent = percent + "%";
+    }
+
+    function renderGoals() {
+        goalsList.innerHTML = "";
+        goals.forEach((goal, idx) => {
+            const goalDiv = document.createElement("div");
+            goalDiv.className = "goal-item" + (goal.completed ? " completed" : "");
+            goalDiv.innerHTML = `
+                <span>${goal.text}</span>
+                <div class="goal-buttons">
+                    <button class="toggle">${goal.completed ? "Undo" : "Done"}</button>
+                    <button class="delete">Delete</button>
+                </div>
+            `;
+            goalDiv.style.animationDelay = `${idx * 0.1}s`;
+            goalsList.appendChild(goalDiv);
+
+            // Toggle completion
+            goalDiv.querySelector(".toggle").addEventListener("click", () => {
+                goal.completed = !goal.completed;
+                localStorage.setItem("dailyGoals", JSON.stringify(goals));
+                renderGoals();
+                updateProgress();
+            });
+
+            // Delete goal
+            goalDiv.querySelector(".delete").addEventListener("click", () => {
+                goals.splice(idx, 1);
+                localStorage.setItem("dailyGoals", JSON.stringify(goals));
+                renderGoals();
+                updateProgress();
+            });
+        });
+        updateProgress();
+    }
+
+    addGoalBtn.addEventListener("click", () => {
+        const text = goalInput.value.trim();
+        if (text === "") return;
+        goals.push({ text: text, completed: false });
+        localStorage.setItem("dailyGoals", JSON.stringify(goals));
+        goalInput.value = "";
+        renderGoals();
+    });
+
+    renderGoals();
+}
+dailyGoalsFeature();
 
